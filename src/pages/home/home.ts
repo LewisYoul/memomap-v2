@@ -1,6 +1,10 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { InfoModalPage } from '../info-modal/info-modal';
+import { Http } from '@angular/http';
+
+import 'rxjs/add/operator/map';
 
 declare var google;
 
@@ -14,13 +18,18 @@ export class HomePage {
   map: any;
   markerToggle: boolean = false;
 
-  constructor(public navCtrl: NavController, public geo: Geolocation) {
+  constructor(
+    public http: Http,
+    public modalCtrl: ModalController,
+    public geo: Geolocation
+  ) {
 
   }
 
-  ionViewDidLoad(){
+  ionViewWillEnter(){
     console.log("anything")
     this.loadMap();
+    this.getMarkers();
   }
 
   toggleMarkerDrop() {
@@ -38,10 +47,46 @@ export class HomePage {
       });
       this.toggleMarkerDrop();
       let content = "<h4>Information!</h4>";
-
+      this.createMarker(event);
       this.addInfoWindow(marker, content);
     }
 
+  }
+
+  getMarkers() {
+    return this.http.get('http://localhost:3000/markers')
+      .map(res => res.json())
+      .subscribe(data => {
+        console.log("RETURNED", data)
+        data.forEach(marker => {
+          this.dropExistingMarker(marker);
+        });
+      });
+  }
+
+  dropExistingMarker(marker) {
+    let point = new google.maps.LatLng(marker.lat, marker.lng);
+    console.log("point", point)
+    let newMarker = new google.maps.Marker({
+      map: this.map,
+      position: point
+    });
+    google.maps.event.addListener(newMarker, 'click', () => {
+      let modal = this.modalCtrl.create(InfoModalPage)
+      modal.present();
+      // infoWindow.open(this.map, marker);
+    });
+    console.log("newmarker", newMarker)
+    console.log("map", this.map)
+  }
+
+  createMarker(event) {
+    console.log("NNNN",  event.ra)
+    this.http.post('http://localhost:3000/markers', { lat: event.latLng.lat(), lng: event.latLng.lng() })
+      .map(res => res.json())
+      .subscribe(data => {
+      console.log(data)
+    })
   }
 
   addInfoWindow(marker, content){
@@ -51,7 +96,12 @@ export class HomePage {
     });
 
     google.maps.event.addListener(marker, 'click', () => {
-      infoWindow.open(this.map, marker);
+      let modal = this.modalCtrl.create(InfoModalPage)
+      modal.present();
+      // infoWindow.open(this.map, marker);
+      google.maps.event.addListener(marker, 'mouseout', function(){
+          // infoWindow.close();
+       });
     });
 
   }
@@ -64,13 +114,14 @@ export class HomePage {
       maximumAge: 0
     };
 
-      let latLng = new google.maps.LatLng(-34.9290, 138.6010);
+      let latLng = new google.maps.LatLng(51.593008, -0.136754);
 
       let mapOptions = {
         center: latLng,
         zoom: 3,
-        mapTypeId: google.maps.MapTypeId.SATELLITE
+        mapTypeId: google.maps.MapTypeId.ROADMAP
       }
+
 
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
       this.map.addListener('click', (event) => {
