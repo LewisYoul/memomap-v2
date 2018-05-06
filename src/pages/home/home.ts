@@ -1,7 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, ModalController } from 'ionic-angular';
+import { NavController, ModalController, PopoverController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { InfoModalPage } from '../info-modal/info-modal';
+import { MarkerSelectPopoverPage } from '../marker-select-popover/marker-select-popover'
 import { Http } from '@angular/http';
 
 import 'rxjs/add/operator/map';
@@ -21,6 +22,7 @@ export class HomePage {
   constructor(
     public http: Http,
     public modalCtrl: ModalController,
+    public popoverCtrl: PopoverController,
     public geo: Geolocation
   ) {
 
@@ -29,7 +31,7 @@ export class HomePage {
   ionViewWillEnter(){
     console.log("anything")
     this.loadMap();
-    this.getMarkers();
+    this.getMarkersFromDb();
   }
 
   toggleMarkerDrop() {
@@ -38,22 +40,37 @@ export class HomePage {
 
   addMarker(event){
     if (this.markerToggle) {
-      console.log(event)
       let marker = new google.maps.Marker({
         map: this.map,
         animation: google.maps.Animation.DROP,
+        icon: 'assets/icons/map-marker.png',
         position: event.latLng
-        // icon: 'http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png'
       });
       this.toggleMarkerDrop();
-      let content = "<h4>Information!</h4>";
-      this.createMarker(event);
-      this.addInfoWindow(marker, content);
+      this.createMarkerInDb(event);
+      // let content = "<h4>Information!</h4>";
+      // this.addInfoWindow(marker, content);
     }
 
   }
 
-  getMarkers() {
+  dropExistingMarker(marker) {
+    let point = new google.maps.LatLng(marker.lat, marker.lng);
+    let newMarker = new google.maps.Marker({
+      map: this.map,
+      icon: 'assets/icons/map-marker.png',
+      position: point
+    });
+    google.maps.event.addListener(newMarker, 'click', () => {
+      let modal = this.modalCtrl.create(InfoModalPage)
+      modal.present();
+      // infoWindow.open(this.map, marker);
+    });
+  }
+
+
+
+  getMarkersFromDb() {
     return this.http.get('http://localhost:3000/markers')
       .map(res => res.json())
       .subscribe(data => {
@@ -64,23 +81,8 @@ export class HomePage {
       });
   }
 
-  dropExistingMarker(marker) {
-    let point = new google.maps.LatLng(marker.lat, marker.lng);
-    console.log("point", point)
-    let newMarker = new google.maps.Marker({
-      map: this.map,
-      position: point
-    });
-    google.maps.event.addListener(newMarker, 'click', () => {
-      let modal = this.modalCtrl.create(InfoModalPage)
-      modal.present();
-      // infoWindow.open(this.map, marker);
-    });
-    console.log("newmarker", newMarker)
-    console.log("map", this.map)
-  }
 
-  createMarker(event) {
+  createMarkerInDb(event) {
     console.log("NNNN",  event.ra)
     this.http.post('http://localhost:3000/markers', { lat: event.latLng.lat(), lng: event.latLng.lng() })
       .map(res => res.json())
@@ -106,6 +108,13 @@ export class HomePage {
 
   }
 
+  openMarkerSelectPopover(event) {
+    let popover = this.popoverCtrl.create(MarkerSelectPopoverPage);
+    popover.present({
+      ev: event
+    });
+  }
+
   loadMap(){
 
     let options = {
@@ -125,7 +134,7 @@ export class HomePage {
 
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
       this.map.addListener('click', (event) => {
-        this.addMarker(event);
+        this.openMarkerSelectPopover(event);
       });
   }
 

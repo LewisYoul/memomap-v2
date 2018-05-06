@@ -6,6 +6,8 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { InfoModalPage } from '../pages/info-modal/info-modal'
+import { MarkerSelectPopoverPage } from '../pages/marker-select-popover/marker-select-popover'
+
 import { HttpModule } from '@angular/http';
 
 import { Geolocation } from '@ionic-native/geolocation';
@@ -17,7 +19,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     MyApp,
     HomePage,
     ListPage,
-    InfoModalPage
+    InfoModalPage,
+    MarkerSelectPopoverPage
   ],
   imports: [
     HttpModule,
@@ -29,7 +32,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     MyApp,
     HomePage,
     ListPage,
-    InfoModalPage
+    InfoModalPage,
+    MarkerSelectPopoverPage
   ],
   providers: [
     StatusBar,
