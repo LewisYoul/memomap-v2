@@ -17,11 +17,11 @@ export class MarkerSelectPopoverPage {
 
   src: string = 'assets/icons/'
   possibleMarkers: any = [
-    `${this.src}sunbathing.png`,
-    `${this.src}map-marker.png`,
-    `${this.src}signpost.png`,
-    `${this.src}home-black-shape.png`,
-    `${this.src}coconut-with-straw.png`,
+    { type: "Beach", img: `${this.src}sunbathing.png` },
+    { type: "Marker", img: `${this.src}map-marker.png` },
+    { type: "Waypoint", img: `${this.src}signpost.png` },
+    { type: "Home", img: `${this.src}home-black-shape.png` },
+    { type: "Food", img: `${this.src}coconut-with-straw.png` },
   ]
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
