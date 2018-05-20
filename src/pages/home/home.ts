@@ -18,6 +18,7 @@ export class HomePage {
   @ViewChild('map') mapElement: ElementRef;
   map: any;
   markerToggle: boolean = false;
+  markerToggleColor: string = 'danger'
 
   constructor(
     public http: Http,
@@ -35,6 +36,11 @@ export class HomePage {
 
   toggleMarkerDrop() {
     this.markerToggle = !this.markerToggle
+    if (this.markerToggleColor === 'primary') {
+      this.markerToggleColor = 'danger'
+    } else {
+      this.markerToggleColor = 'primary'
+    }
   }
 
   addMarker(event){
@@ -47,24 +53,24 @@ export class HomePage {
       });
       this.toggleMarkerDrop();
       this.createMarkerInDb(event);
-      // let content = "<h4>Information!</h4>";
-      // this.addInfoWindow(marker, content);
     }
 
   }
 
   dropExistingMarker(marker) {
-    let point = new google.maps.LatLng(marker.lat, marker.lng);
-    let newMarker = new google.maps.Marker({
-      map: this.map,
-      icon: `assets/icons/${marker.category}.png`,
-      position: point
-    });
-    google.maps.event.addListener(newMarker, 'click', () => {
-      let modal = this.modalCtrl.create(InfoModalPage)
-      modal.present();
-      // infoWindow.open(this.map, marker);
-    });
+    if (marker) {
+      let point = new google.maps.LatLng(marker.lat, marker.lng);
+      let newMarker = new google.maps.Marker({
+        map: this.map,
+        animation: google.maps.Animation.DROP,
+        icon: `assets/icons/${marker.category}.png`,
+        position: point
+      });
+      google.maps.event.addListener(newMarker, 'click', () => {
+        let modal = this.modalCtrl.create(InfoModalPage)
+        modal.present();
+      });
+    }
   }
 
 
@@ -108,14 +114,15 @@ export class HomePage {
   }
 
   openMarkerSelectPopover(event) {
-    console.log(event)
-    let popover = this.popoverCtrl.create(MarkerSelectPopoverPage, { event: event });
-    popover.present({
-      ev: event
-    });
-    popover.onDidDismiss(newMarker => {
-      this.dropExistingMarker(newMarker)
-    });
+    if (this.markerToggle) {
+      let popover = this.popoverCtrl.create(MarkerSelectPopoverPage, { event: event });
+      popover.present({
+        ev: event
+      });
+      popover.onDidDismiss(newMarker => {
+        this.dropExistingMarker(newMarker)
+      });
+    }
   }
 
   loadMap(){
