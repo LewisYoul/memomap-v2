@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { Http } from '@angular/http';
 
 /**
  * Generated class for the MarkerSelectPopoverPage page.
@@ -16,15 +17,35 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 export class MarkerSelectPopoverPage {
 
   src: string = 'assets/icons/'
-  possibleMarkers: any = [
-    { type: "Beach", img: `${this.src}sunbathing.png` },
-    { type: "Marker", img: `${this.src}map-marker.png` },
-    { type: "Waypoint", img: `${this.src}signpost.png` },
-    { type: "Home", img: `${this.src}home-black-shape.png` },
-    { type: "Food", img: `${this.src}coconut-with-straw.png` },
+  possibleMarkers: object[] = [
+    { category: "Beach", img: `${this.src}sunbathing.png` },
+    { category: "Marker", img: `${this.src}map-marker.png` },
+    { category: "Waypoint", img: `${this.src}signpost.png` },
+    { category: "Home", img: `${this.src}home-black-shape.png` },
+    { category: "Food", img: `${this.src}coconut-with-straw.png` },
   ]
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public viewCtrl: ViewController,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public http: Http
+  ) {}
+
+  createMarker(marker) {
+    console.log("MARKER", marker.category)
+    const event = this.navParams.get('event')
+    console.log("EVENT", event)
+    this.http.post('http://localhost:3000/markers', {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+      category: marker.category
+    })
+      .map(res => res.json())
+      .subscribe(data => {
+      this.viewCtrl.dismiss();
+      console.log(data)
+    })
   }
 
   ionViewDidLoad() {

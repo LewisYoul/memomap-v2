@@ -15,9 +15,9 @@
 
 <ion-content padding>
 <ion-list>
-  <button ion-item *ngFor="let marker of possibleMarkers">
+  <button ion-item *ngFor="let marker of possibleMarkers" (click)="createMarker(marker)">
     <img src='{{marker.img}}'>
-    {{marker.type}}
+    {{marker.category}}
   </button>
 </ion-list>
 </ion-content>

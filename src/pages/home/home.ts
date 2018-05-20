@@ -109,7 +109,8 @@ export class HomePage {
   }
 
   openMarkerSelectPopover(event) {
-    let popover = this.popoverCtrl.create(MarkerSelectPopoverPage);
+    console.log(event)
+    let popover = this.popoverCtrl.create(MarkerSelectPopoverPage, { event: event });
     popover.present({
       ev: event
     });
