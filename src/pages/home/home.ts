@@ -29,7 +29,6 @@ export class HomePage {
   }
 
   ionViewWillEnter(){
-    console.log("anything")
     this.loadMap();
     this.getMarkersFromDb();
   }
@@ -58,7 +57,7 @@ export class HomePage {
     let point = new google.maps.LatLng(marker.lat, marker.lng);
     let newMarker = new google.maps.Marker({
       map: this.map,
-      icon: 'assets/icons/map-marker.png',
+      icon: `assets/icons/${marker.category}.png`,
       position: point
     });
     google.maps.event.addListener(newMarker, 'click', () => {
@@ -113,6 +112,9 @@ export class HomePage {
     let popover = this.popoverCtrl.create(MarkerSelectPopoverPage, { event: event });
     popover.present({
       ev: event
+    });
+    popover.onDidDismiss(newMarker => {
+      this.dropExistingMarker(newMarker)
     });
   }
 
