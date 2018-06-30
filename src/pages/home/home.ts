@@ -3,8 +3,9 @@ import { NavController, ModalController, PopoverController } from 'ionic-angular
 import { Geolocation } from '@ionic-native/geolocation';
 import { InfoModalPage } from '../info-modal/info-modal';
 import { MarkerSelectPopoverPage } from '../marker-select-popover/marker-select-popover'
+import { JourneySelectPopoverPage } from '../journey-select-popover/journey-select-popover'
 import { Http } from '@angular/http';
-
+import { MarkersServiceProvider } from '../../providers/markers-service/markers-service'
 import 'rxjs/add/operator/map';
 
 declare var google;
@@ -24,9 +25,9 @@ export class HomePage {
     public http: Http,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    public geo: Geolocation
+    public geo: Geolocation,
+    public markersService: MarkersServiceProvider
   ) {
-
   }
 
   ionViewWillEnter(){
@@ -35,7 +36,11 @@ export class HomePage {
   }
 
   toggleMarkerDrop() {
-    this.markerToggle = !this.markerToggle
+    this.markerToggle = !this.markerToggle;
+    this.toggleMarkerDropColor();
+  }
+
+  toggleMarkerDropColor() {
     if (this.markerToggleColor === 'primary') {
       this.markerToggleColor = 'danger'
     } else {
@@ -54,7 +59,13 @@ export class HomePage {
       this.toggleMarkerDrop();
       this.createMarkerInDb(event);
     }
+  }
 
+  openJourneysPopover(event) {
+    let popover = this.popoverCtrl.create(JourneySelectPopoverPage)
+    popover.present({
+      ev: event
+    });
   }
 
   dropExistingMarker(marker) {
@@ -73,22 +84,18 @@ export class HomePage {
     }
   }
 
-
-
   getMarkersFromDb() {
-    return this.http.get('http://localhost:3000/markers')
-      .map(res => res.json())
-      .subscribe(data => {
-        console.log("RETURNED", data)
-        data.forEach(marker => {
+    this.markersService.getMarkers()
+      .then((markers) => {
+        markers.forEach(marker => {
           this.dropExistingMarker(marker);
         });
-      });
+      })
+      .catch(err => console.error(err))
   }
 
 
   createMarkerInDb(event) {
-    console.log("NNNN",  event.ra)
     this.http.post('http://localhost:3000/markers', { lat: event.latLng.lat(), lng: event.latLng.lng() })
       .map(res => res.json())
       .subscribe(data => {
@@ -126,7 +133,6 @@ export class HomePage {
   }
 
   loadMap(){
-
     let options = {
       enableHighAccuracy: true,
       timeout: 25000,
@@ -147,5 +153,4 @@ export class HomePage {
         this.openMarkerSelectPopover(event);
       });
   }
-
 }

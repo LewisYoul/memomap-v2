@@ -7,12 +7,15 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { InfoModalPage } from '../pages/info-modal/info-modal'
 import { MarkerSelectPopoverPage } from '../pages/marker-select-popover/marker-select-popover'
+import { JourneySelectPopoverPage } from '../pages/journey-select-popover/journey-select-popover'
+
 
 import { HttpModule } from '@angular/http';
 
 import { Geolocation } from '@ionic-native/geolocation';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { MarkersServiceProvider } from '../providers/markers-service/markers-service';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     ListPage,
     InfoModalPage,
-    MarkerSelectPopoverPage
+    MarkerSelectPopoverPage,
+    JourneySelectPopoverPage
   ],
   imports: [
     HttpModule,
@@ -33,13 +37,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     ListPage,
     InfoModalPage,
-    MarkerSelectPopoverPage
+    MarkerSelectPopoverPage,
+    JourneySelectPopoverPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     Geolocation,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    MarkersServiceProvider
   ]
 })
 export class AppModule {}
