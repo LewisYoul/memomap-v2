@@ -93,7 +93,9 @@ export class HomePage {
       .subscribe(markers => {
         markers.forEach(marker => {
           this.dropExistingMarker(marker);
-        });
+        }, err => {
+          console.log(err)
+        })
       })
   }
 
@@ -102,8 +104,10 @@ export class HomePage {
     const latLng = { lat: event.latLng.lat(), lng: event.latLng.lng() }
 
     this.markersService.createMarker(latLng)
-      .subscribe(data => {
-      console.log(data)
+      .subscribe(res => {
+      console.log(res)
+    }, err => {
+      console.log(err)
     })
   }
 
