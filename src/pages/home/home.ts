@@ -95,7 +95,6 @@ export class HomePage {
           this.dropExistingMarker(marker);
         });
       })
-      .catch(err => console.error(err))
   }
 
 

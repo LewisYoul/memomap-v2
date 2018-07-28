@@ -15,11 +15,8 @@ import { HttpModule } from '@angular/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-<<<<<<< HEAD
+
 import { MarkersProvider } from '../providers/markers/markers';
-=======
-import { MarkersServiceProvider } from '../providers/markers-service/markers-service';
->>>>>>> master
 
 @NgModule({
   declarations: [
@@ -49,11 +46,7 @@ import { MarkersServiceProvider } from '../providers/markers-service/markers-ser
     SplashScreen,
     Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-<<<<<<< HEAD
     MarkersProvider
-=======
-    MarkersServiceProvider
->>>>>>> master
   ]
 })
 export class AppModule {}
