@@ -5,7 +5,11 @@ import { InfoModalPage } from '../info-modal/info-modal';
 import { MarkerSelectPopoverPage } from '../marker-select-popover/marker-select-popover'
 import { JourneySelectPopoverPage } from '../journey-select-popover/journey-select-popover'
 import { Http } from '@angular/http';
-import { MarkersServiceProvider } from '../../providers/markers-service/markers-service'
+
+import { MarkersProvider } from '../../providers/markers/markers'
+
+
+
 import 'rxjs/add/operator/map';
 
 declare var google;
@@ -26,7 +30,7 @@ export class HomePage {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public geo: Geolocation,
-    public markersService: MarkersServiceProvider
+    public markersService: MarkersProvider
   ) {
   }
 
@@ -85,19 +89,19 @@ export class HomePage {
   }
 
   getMarkersFromDb() {
-    this.markersService.getMarkers()
-      .then((markers) => {
+    return this.markersService.getMarkers()
+      .subscribe(markers => {
         markers.forEach(marker => {
           this.dropExistingMarker(marker);
         });
       })
-      .catch(err => console.error(err))
   }
 
 
   createMarkerInDb(event) {
-    this.http.post('http://localhost:3000/markers', { lat: event.latLng.lat(), lng: event.latLng.lng() })
-      .map(res => res.json())
+    const latLng = { lat: event.latLng.lat(), lng: event.latLng.lng() }
+
+    this.markersService.createMarker(latLng)
       .subscribe(data => {
       console.log(data)
     })

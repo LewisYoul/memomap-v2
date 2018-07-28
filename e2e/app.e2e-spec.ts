@@ -1,14 +1,21 @@
-import { MemomapPage } from './app.po';
+import { Page } from './app.po';
 
-describe('memomap App', function() {
-  let page: MemomapPage;
+describe('App', () => {
+  let page: Page;
 
   beforeEach(() => {
-    page = new MemomapPage();
+    page = new Page();
   });
 
-  it('should display message saying app works', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toEqual('app works!');
-  });
+  describe('default screen', () => {
+    beforeEach(() => {
+      page.navigateTo('/');
+    });
+
+    it('should have a title saying Page One', () => {
+      page.getPageOneTitleText().then(title => {
+        expect(title).toEqual('Page One');
+      });
+    });
+  })
 });
