@@ -39,7 +39,15 @@ export class InfoModalPage {
 
   }
 
-
+  deleteDaMarker() {
+    this.markersService.deleteMarker(this.marker.id).subscribe(res => {
+      console.log(`Marker with id ${this.marker.id} deleted successfully`)
+      this.marker.setMap(null)
+      this.viewCtrl.dismiss()
+    }, err => {
+      console.log(err)
+    });
+  }
 
   presentDeleteAlert() {
     let alert = this.alertCtrl.create({
@@ -53,13 +61,7 @@ export class InfoModalPage {
         {
           text: 'Delete',
           handler: () => {
-            this.markersService.deleteMarker(this.marker.id).subscribe(res => {
-              console.log(`Marker with id ${this.marker.id} deleted successfully`)
-              this.marker.setMap(null)
-              this.viewCtrl.dismiss()
-            }, err => {
-              console.log(err)
-            });
+            this.deleteDaMarker()
           }
         }
       ]
