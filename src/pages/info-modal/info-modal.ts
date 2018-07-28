@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { MarkersProvider } from '../../providers/markers/markers';
 
 /**
  * Generated class for the InfoModalPage page.
@@ -15,11 +16,31 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class InfoModalPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  marker: any;
+
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public viewCtrl: ViewController,
+    public markersService: MarkersProvider
+  ) {}
+
+  ionViewWillEnter() {
+    this.marker = this.navParams.get('marker')
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad InfoModalPage');
+  }
+
+  deleteMarker() {
+    this.marker.setMap(null)
+    this.markersService.deleteMarker(this.marker.id).subscribe(res => {
+        console.log(`Marker with id ${this.marker.id} deleted successfully`)
+      }, err => {
+        console.log(err)
+      });
+    this.viewCtrl.dismiss()
   }
 
 }

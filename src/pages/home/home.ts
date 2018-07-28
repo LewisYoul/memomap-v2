@@ -81,8 +81,9 @@ export class HomePage {
         icon: `assets/icons/${marker.category}.png`,
         position: point
       });
+      newMarker['id'] = marker.id
       google.maps.event.addListener(newMarker, 'click', () => {
-        let modal = this.modalCtrl.create(InfoModalPage)
+        let modal = this.modalCtrl.create(InfoModalPage, { marker: newMarker })
         modal.present();
       });
     }
@@ -111,22 +112,23 @@ export class HomePage {
     })
   }
 
-  addInfoWindow(marker, content){
-
-    let infoWindow = new google.maps.InfoWindow({
-      content: content
-    });
-
-    google.maps.event.addListener(marker, 'click', () => {
-      let modal = this.modalCtrl.create(InfoModalPage)
-      modal.present();
-      // infoWindow.open(this.map, marker);
-      google.maps.event.addListener(marker, 'mouseout', function(){
-          // infoWindow.close();
-       });
-    });
-
-  }
+  // addInfoWindow(marker, content){
+  //
+  //   let infoWindow = new google.maps.InfoWindow({
+  //     content: content
+  //   });
+  //
+  //   google.maps.event.addListener(marker, 'click', () => {
+  //     console.log(marker)
+  //     let modal = this.modalCtrl.create(InfoModalPage, { marker: marker })
+  //     modal.present();
+  //     // infoWindow.open(this.map, marker);
+  //     google.maps.event.addListener(marker, 'mouseout', function(){
+  //         // infoWindow.close();
+  //      });
+  //   });
+  //
+  // }
 
   openMarkerSelectPopover(event) {
     if (this.markerToggle) {

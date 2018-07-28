@@ -27,4 +27,10 @@ export class MarkersProvider {
       .map(res => res.json())
   }
 
+  deleteMarker(markerId) {
+    console.log("delete id", markerId)
+    return this.http.delete(`http://localhost:3000/markers/${markerId}`)
+      .map(res => res.json())
+  }
+
 }
