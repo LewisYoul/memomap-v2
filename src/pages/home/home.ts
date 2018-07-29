@@ -35,13 +35,13 @@ export class HomePage {
   }
 
   ionViewWillEnter(){
-    this.loadMap();
-    this.getMarkersFromDb();
+    // this.loadMap();
+    // this.getMarkersFromDb();
   }
 
   toggleMarkerDrop() {
-    this.markerToggle = !this.markerToggle;
-    this.toggleMarkerDropColor();
+    // this.markerToggle = !this.markerToggle;
+    // this.toggleMarkerDropColor();
   }
 
   toggleMarkerDropColor() {
