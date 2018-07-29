@@ -43,9 +43,7 @@
     "save": "^2.3.2",
     "sw-toolbox": "3.6.0",
     "webpack": "^4.14.0",
-    "zone.js": "0.8.26"
-  },
-  "devDependencies": {
+    "zone.js": "0.8.26",
     "@ionic/app-scripts": "3.1.8",
     "@types/jasmine": "^2.8.8",
     "@types/node": "^10.5.1",
@@ -66,6 +64,8 @@
     "ts-loader": "^4.4.2",
     "ts-node": "^7.0.0",
     "typescript": "~2.6.2"
+  },
+  "devDependencies": {
   },
   "description": "An Ionic project",
   "cordova": {
