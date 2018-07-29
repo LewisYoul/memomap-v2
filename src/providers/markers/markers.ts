@@ -22,13 +22,13 @@ export class MarkersProvider {
       .map(res => res.json())
   }
 
-  createMarker(latLng) {
-    return this.http.post('http://localhost:3000/markers', latLng)
-      .map(res => res.json())
+  createMarker(newMarker) {
+    console.log("you created a marker")
+    return this.http.post('http://localhost:3000/markers', newMarker)
+      .map(response => response.json())
   }
 
   deleteMarker(markerId) {
-    console.log("delete id", markerId)
     return this.http.delete(`http://localhost:3000/markers/${markerId}`)
       .map(res => res.json())
   }

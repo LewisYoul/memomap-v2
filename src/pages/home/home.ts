@@ -52,19 +52,6 @@ export class HomePage {
     }
   }
 
-  addMarker(event){
-    if (this.markerToggle) {
-      let marker = new google.maps.Marker({
-        map: this.map,
-        animation: google.maps.Animation.DROP,
-        icon: 'assets/icons/map-marker.png',
-        position: event.latLng
-      });
-      this.toggleMarkerDrop();
-      this.createMarkerInDb(event);
-    }
-  }
-
   openJourneysPopover(event) {
     let popover = this.popoverCtrl.create(JourneySelectPopoverPage)
     popover.present({
@@ -100,44 +87,26 @@ export class HomePage {
       })
   }
 
-
-  createMarkerInDb(event) {
-    const latLng = { lat: event.latLng.lat(), lng: event.latLng.lng() }
-
-    this.markersService.createMarker(latLng)
-      .subscribe(res => {
-      console.log(res)
-    }, err => {
-      console.log(err)
-    })
-  }
-
-  // addInfoWindow(marker, content){
-  //
-  //   let infoWindow = new google.maps.InfoWindow({
-  //     content: content
-  //   });
-  //
-  //   google.maps.event.addListener(marker, 'click', () => {
-  //     console.log(marker)
-  //     let modal = this.modalCtrl.create(InfoModalPage, { marker: marker })
-  //     modal.present();
-  //     // infoWindow.open(this.map, marker);
-  //     google.maps.event.addListener(marker, 'mouseout', function(){
-  //         // infoWindow.close();
-  //      });
-  //   });
-  //
-  // }
-
   openMarkerSelectPopover(event) {
     if (this.markerToggle) {
       let popover = this.popoverCtrl.create(MarkerSelectPopoverPage, { event: event });
       popover.present({
         ev: event
       });
-      popover.onDidDismiss(newMarker => {
-        this.dropExistingMarker(newMarker)
+      popover.onDidDismiss(category => {
+        if (category) {
+          const newMarker = {
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng(),
+            category: category
+          }
+
+          this.markersService.createMarker(newMarker)
+            .subscribe(
+              marker => this.dropExistingMarker(marker),
+              err => console.log(err)
+          );
+        }
       });
     }
   }

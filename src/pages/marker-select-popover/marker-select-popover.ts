@@ -26,17 +26,7 @@ export class MarkerSelectPopoverPage {
   ) {}
 
   createMarker(marker) {
-    const event = this.navParams.get('event')
-    const newMarker = {
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng(),
-      category: marker.category
-    }
-    this.http.post('http://localhost:3000/markers', newMarker)
-      .map(res => res.json())
-      .subscribe(data => {
-      this.viewCtrl.dismiss(newMarker);
-    })
+    this.viewCtrl.dismiss(marker.category);
   }
 
 }
