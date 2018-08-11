@@ -18,18 +18,18 @@ export class MarkersProvider {
   }
 
   getMarkers() {
-    return this.http.get('http://localhost:3000/markers')
+    return this.http.get('http://localhost:3000/api/markers')
       .map(res => res.json())
   }
 
   createMarker(newMarker) {
     console.log("you created a marker")
-    return this.http.post('http://localhost:3000/markers', newMarker)
+    return this.http.post('http://localhost:3000/api/markers', newMarker)
       .map(response => response.json())
   }
 
   deleteMarker(markerId) {
-    return this.http.delete(`http://localhost:3000/markers/${markerId}`)
+    return this.http.delete(`http://localhost:3000/api/markers/${markerId}`)
       .map(res => res.json())
   }
 

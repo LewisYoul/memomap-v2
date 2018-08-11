@@ -35,13 +35,13 @@ export class HomePage {
   }
 
   ionViewWillEnter(){
-    // this.loadMap();
-    // this.getMarkersFromDb();
+    this.loadMap();
+    this.getMarkersFromDb();
   }
 
   toggleMarkerDrop() {
-    // this.markerToggle = !this.markerToggle;
-    // this.toggleMarkerDropColor();
+    this.markerToggle = !this.markerToggle;
+    this.toggleMarkerDropColor();
   }
 
   toggleMarkerDropColor() {
@@ -94,6 +94,7 @@ export class HomePage {
         ev: event
       });
       popover.onDidDismiss(category => {
+
         if (category) {
           const newMarker = {
             lat: event.latLng.lat(),
@@ -104,9 +105,12 @@ export class HomePage {
           this.markersService.createMarker(newMarker)
             .subscribe(
               marker => this.dropExistingMarker(marker),
-              err => console.log(err)
+              err => console.log(err),
+              () => console.log("observable complete")
           );
         }
+
+
       });
     }
   }

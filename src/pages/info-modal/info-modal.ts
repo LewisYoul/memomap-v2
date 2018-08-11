@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController, ToastController } from 'ionic-angular';
 import { MarkersProvider } from '../../providers/markers/markers';
 
 /**
@@ -23,7 +23,8 @@ export class InfoModalPage {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public alertCtrl: AlertController,
-    public markersService: MarkersProvider
+    public markersService: MarkersProvider,
+    public toastCtrl: ToastController
   ) {}
 
   ionViewWillEnter() {
@@ -35,17 +36,15 @@ export class InfoModalPage {
   }
 
   deleteMarker() {
-    this.presentDeleteAlert()
-
-  }
-
-  deleteDaMarker() {
     this.markersService.deleteMarker(this.marker.id).subscribe(res => {
       console.log(`Marker with id ${this.marker.id} deleted successfully`)
       this.marker.setMap(null)
       this.viewCtrl.dismiss()
+      this.presentToast('Marker successfully deleted')
     }, err => {
       console.log(err)
+      this.viewCtrl.dismiss()
+      this.presentToast('There was an error deleting the marker, please try again')
     });
   }
 
@@ -61,12 +60,21 @@ export class InfoModalPage {
         {
           text: 'Delete',
           handler: () => {
-            this.deleteDaMarker()
+            this.deleteMarker()
           }
         }
       ]
     });
     alert.present();
+  }
+
+  presentToast(message) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000
+    });
+
+    toast.present();
   }
 
 }
