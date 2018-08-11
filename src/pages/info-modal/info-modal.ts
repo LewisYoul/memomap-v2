@@ -1,13 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, AlertController, ToastController } from 'ionic-angular';
 import { MarkersProvider } from '../../providers/markers/markers';
-
-/**
- * Generated class for the InfoModalPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 @IonicPage()
 @Component({
@@ -17,6 +11,7 @@ import { MarkersProvider } from '../../providers/markers/markers';
 export class InfoModalPage {
 
   marker: any;
+  markerEditForm: FormGroup;
 
   constructor(
     public navCtrl: NavController,
@@ -24,8 +19,14 @@ export class InfoModalPage {
     public viewCtrl: ViewController,
     public alertCtrl: AlertController,
     public markersService: MarkersProvider,
-    public toastCtrl: ToastController
-  ) {}
+    public toastCtrl: ToastController,
+    private formBuilder: FormBuilder
+  ) {
+    this.markerEditForm = this.formBuilder.group({
+      title: ['', Validators.required],
+      description: ['', Validators.required]
+    })
+  }
 
   ionViewWillEnter() {
     this.marker = this.navParams.get('marker')
